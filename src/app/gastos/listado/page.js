@@ -12,7 +12,7 @@ export default function ListadoGastosPage() {
       const token = localStorage.getItem('token');
 
       try {
-        const res = await fetch('http://localhost:5000/api/expenses', {
+const res = await fetch('https://yerberita-backend-production.up.railway.app/api/expenses', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

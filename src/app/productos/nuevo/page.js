@@ -17,7 +17,7 @@ export default function NuevoProductoPage() {
     try {
       const token = localStorage.getItem('token'); // Asegúrate de tener el token almacenado
 
-      const res = await fetch('http://localhost:5000/api/products', {
+      const res = await fetch('https://yerberita-backend-production.up.railway.app/api/products', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

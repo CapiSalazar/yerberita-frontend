@@ -12,7 +12,7 @@ export default function ListadoOrdenesPage() {
       const token = localStorage.getItem('token');
 
       try {
-        const res = await fetch('http://localhost:5000/api/orders', {
+const res = await fetch('https://yerberita-backend-production.up.railway.app/api/orders', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

@@ -14,7 +14,7 @@ export default function NuevoClientePage() {
     setMsg('');
 
     try {
-      const res = await fetch('http://localhost:5000/api/customers', {
+const res = await fetch('https://yerberita-backend-production.up.railway.app/api/customers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

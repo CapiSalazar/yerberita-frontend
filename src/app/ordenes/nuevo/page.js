@@ -14,10 +14,10 @@ export default function NuevaOrdenPage() {
       const token = localStorage.getItem('token');
 
       const [resClientes, resProductos] = await Promise.all([
-        fetch('http://localhost:5000/api/customers', {
+        fetch('https://yerberita-backend-production.up.railway.app/api/customers', {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch('http://localhost:5000/api/products', {
+        fetch('https://yerberita-backend-production.up.railway.app/api/products', {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -54,7 +54,7 @@ export default function NuevaOrdenPage() {
     const token = localStorage.getItem('token');
 
     try {
-      const res = await fetch('http://localhost:5000/api/orders', {
+const res = await fetch('https://yerberita-backend-production.up.railway.app/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

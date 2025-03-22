@@ -8,7 +8,7 @@ export default function ListadoClientesPage() {
   useEffect(() => {
     const fetchClientes = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/customers', {
+const res = await fetch('https://yerberita-backend-production.up.railway.app/api/customers', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

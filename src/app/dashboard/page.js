@@ -17,7 +17,7 @@ export default function DashboardPage() {
 
     const fetchData = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/reports/balance', {
+const res = await fetch('https://yerberita-backend-production.up.railway.app/api/reports/balance', {
           headers: { Authorization: `Bearer ${token}` }
         });
 
