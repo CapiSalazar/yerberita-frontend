@@ -7,6 +7,7 @@ export default function NuevaOrdenPage() {
   const [productos, setProductos] = useState([]);
   const [items, setItems] = useState([]);
   const [clienteSeleccionado, setClienteSeleccionado] = useState('');
+  const [clienteTexto, setClienteTexto] = useState('');
   const [mensaje, setMensaje] = useState(null);
 
   useEffect(() => {
@@ -49,12 +50,22 @@ export default function NuevaOrdenPage() {
     }, 0);
   };
 
+  const handleClienteSeleccion = (valor) => {
+    const cliente = clientes.find((c) =>
+      c.tipo_cliente === 'B2B'
+        ? c.empresa === valor
+        : c.name === valor
+    );
+    setClienteSeleccionado(cliente ? cliente.id : '');
+    setClienteTexto(valor);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
 
     try {
-const res = await fetch('https://yerberita-backend-production.up.railway.app/api/orders', {
+      const res = await fetch('https://yerberita-backend-production.up.railway.app/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,6 +83,7 @@ const res = await fetch('https://yerberita-backend-production.up.railway.app/api
 
       setMensaje({ tipo: 'exito', texto: 'Orden creada con éxito ✅' });
       setClienteSeleccionado('');
+      setClienteTexto('');
       setItems([]);
     } catch (err) {
       setMensaje({ tipo: 'error', texto: err.message });
@@ -95,18 +107,21 @@ const res = await fetch('https://yerberita-backend-production.up.railway.app/api
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-semibold mb-1">Cliente</label>
-          <select
-            value={clienteSeleccionado}
-            onChange={(e) => setClienteSeleccionado(e.target.value)}
+          <input
+            list="clientes"
+            value={clienteTexto}
+            onChange={(e) => handleClienteSeleccion(e.target.value)}
+            placeholder="Escribe para buscar cliente..."
             className="w-full p-2 border rounded"
-          >
-            <option value="">-- Selecciona un cliente --</option>
+          />
+          <datalist id="clientes">
             {clientes.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
+              <option
+                key={c.id}
+                value={c.tipo_cliente === 'B2B' ? c.empresa : c.name}
+              />
             ))}
-          </select>
+          </datalist>
         </div>
 
         <div className="space-y-4">
@@ -150,6 +165,7 @@ const res = await fetch('https://yerberita-backend-production.up.railway.app/api
         <button
           type="submit"
           className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          disabled={!clienteSeleccionado || items.length === 0}
         >
           Guardar orden
         </button>
