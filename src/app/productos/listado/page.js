@@ -47,19 +47,26 @@ export default function ListadoProductosPage() {
       {!cargando && productos.length > 0 && (
         <table className="w-full border border-gray-200">
           <thead className="bg-green-100">
-            <tr>
-              <th className="text-left p-2 border-b">🛍 Producto</th>
-              <th className="text-left p-2 border-b">💰 Precio</th>
-            </tr>
-          </thead>
-          <tbody>
-            {productos.map((p) => (
-              <tr key={p.id} className="hover:bg-green-50">
-                <td className="p-2 border-b">{p.name}</td>
-                <td className="p-2 border-b">${parseFloat(p.price).toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
+  <tr>
+    <th className="p-2 border">Nombre</th>
+    <th className="p-2 border">Precio</th>
+    <th className="p-2 border">Costo Producción</th> {/* Nuevo */}
+    <th className="p-2 border">Acciones</th>
+  </tr>
+</thead>
+<tbody>
+  {productos.map((producto) => (
+    <tr key={producto.id} className="hover:bg-green-50">
+      <td className="p-2 border">{producto.name}</td>
+      <td className="p-2 border">${parseFloat(producto.price).toFixed(2)}</td>
+      <td className="p-2 border">${parseFloat(producto.costo_produccion).toFixed(2)}</td> {/* Nuevo */}
+      <td className="p-2 border">
+        {/* tus acciones */}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
         </table>
       )}
     </div>

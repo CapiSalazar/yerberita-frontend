@@ -1,86 +1,82 @@
 'use client';
-
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function NuevoProductoPage() {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
-  const [mensaje, setMensaje] = useState(null);
+  const [costoProduccion, setCostoProduccion] = useState('');
+  const [msg, setMsg] = useState('');
+
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!name || !price) {
-      return setMensaje({ tipo: 'error', texto: 'Todos los campos son obligatorios' });
-    }
+    setMsg('');
 
     try {
-      const token = localStorage.getItem('token'); // Asegúrate de tener el token almacenado
-
-      const res = await fetch('https://yerberita-backend-production.up.railway.app/api/products', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ name, price }),
+        body: JSON.stringify({ name, price, costo_produccion: costoProduccion }),
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al crear producto');
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Error al crear producto');
-      }
-
-      setMensaje({ tipo: 'exito', texto: 'Producto creado correctamente ✅' });
+      setMsg('🎉 Producto creado con éxito');
       setName('');
       setPrice('');
+      setCostoProduccion('');
+      router.push('/productos/listado'); // o donde se redireccione
     } catch (error) {
-      setMensaje({ tipo: 'error', texto: error.message });
+      setMsg(`❌ ${error.message}`);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow">
-      <h1 className="text-2xl font-bold text-green-700 mb-4">➕ Registrar nuevo producto</h1>
-
-      {mensaje && (
-        <div
-          className={`p-2 mb-4 rounded ${
-            mensaje.tipo === 'exito' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-          }`}
-        >
-          {mensaje.texto}
-        </div>
-      )}
-
+      <h1 className="text-2xl font-bold mb-4 text-green-700">Nuevo Producto 🍯</h1>
+      {msg && <p className="mb-4 text-sm text-center">{msg}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-semibold text-gray-700">Nombre del producto</label>
+          <label className="block text-gray-700">Nombre del producto</label>
           <input
             type="text"
-            className="w-full p-2 border rounded"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Ej. Miel Orgánica 500g"
+            className="w-full border p-2 rounded"
+            required
           />
         </div>
-
         <div>
-          <label className="block text-sm font-semibold text-gray-700">Precio</label>
+          <label className="block text-gray-700">Precio de venta ($)</label>
           <input
             type="number"
-            className="w-full p-2 border rounded"
+            step="0.01"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            placeholder="Ej. 120"
+            className="w-full border p-2 rounded"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">Costo de producción ($)</label>
+          <input
+            type="number"
+            step="0.01"
+            value={costoProduccion}
+            onChange={(e) => setCostoProduccion(e.target.value)}
+            className="w-full border p-2 rounded"
+            required
           />
         </div>
 
-        <button
-          type="submit"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
+        <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
           Guardar producto
         </button>
       </form>
