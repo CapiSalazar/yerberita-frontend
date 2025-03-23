@@ -5,23 +5,47 @@ export default function NuevoClientePage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [telefono, setTelefono] = useState('');
-  const [tipoCliente, setTipoCliente] = useState(''); // 🆕
-  const [redSocial, setRedSocial] = useState('');     // 🆕
+  const [tipoCliente, setTipoCliente] = useState('');
+  const [redSocial, setRedSocial] = useState('');
+  const [empresa, setEmpresa] = useState('');
+  const [giroEmpresa, setGiroEmpresa] = useState('');
   const [msg, setMsg] = useState('');
 
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
+
+  const girosDisponibles = [
+    "Cafetería",
+    "Restaurante",
+    "Tienda Natural",
+    "Herbolaria",
+    "Veterinaria",
+    "Corporativo",
+    "Gimnasio",
+    "Spa",
+    "Distribuidora",
+    "Otro"
+  ];
+
+  console.log('📤 Enviando datos:', {
+    name,
+    email,
+    telefono,
+    tipo_cliente: tipoCliente,
+    red_social: redSocial,
+    empresa: tipoCliente === 'B2B' ? empresa : null,
+    giro_empresa: tipoCliente === 'B2B' ? giroEmpresa : null
+  });
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMsg('');
 
-  // ✅ Validación de teléfono mexicano (10 dígitos)
-  const telefonoValido = /^\d{10}$/.test(telefono);
-  if (telefono && !telefonoValido) {
-    setMsg('❌ El teléfono debe tener exactamente 10 dígitos (México)');
-    return;
-  }
-
+    const telefonoValido = /^\d{10}$/.test(telefono);
+    if (telefono && !telefonoValido) {
+      setMsg('❌ El teléfono debe tener exactamente 10 dígitos (México)');
+      return;
+    }
 
     try {
       const res = await fetch('https://yerberita-backend-production.up.railway.app/api/customers', {
@@ -34,8 +58,10 @@ export default function NuevoClientePage() {
           name,
           email,
           telefono,
-          tipo_cliente: tipoCliente, // 🆕
-          red_social: redSocial      // 🆕
+          tipo_cliente: tipoCliente,
+          red_social: redSocial,
+          empresa: tipoCliente === 'B2B' ? empresa : null,
+          giro_empresa: tipoCliente === 'B2B' ? giroEmpresa : null
         })
       });
 
@@ -49,6 +75,8 @@ export default function NuevoClientePage() {
       setTelefono('');
       setTipoCliente('');
       setRedSocial('');
+      setEmpresa('');
+      setGiroEmpresa('');
     } catch (error) {
       setMsg(`❌ ${error.message}`);
     }
@@ -93,7 +121,6 @@ export default function NuevoClientePage() {
           />
         </div>
 
-        {/* 🆕 Select tipo_cliente */}
         <div>
           <label className="block text-gray-700">Tipo de Cliente</label>
           <select
@@ -107,7 +134,36 @@ export default function NuevoClientePage() {
           </select>
         </div>
 
-        {/* 🆕 Input red_social */}
+        {tipoCliente === 'B2B' && (
+          <>
+            <div>
+              <label className="block text-gray-700">Nombre de la Empresa</label>
+              <input
+                type="text"
+                className="w-full border border-gray-300 p-2 rounded"
+                value={empresa}
+                onChange={(e) => setEmpresa(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Giro de la Empresa</label>
+              <select
+                className="w-full border border-gray-300 p-2 rounded"
+                value={giroEmpresa}
+                onChange={(e) => setGiroEmpresa(e.target.value)}
+              >
+                <option value="">Selecciona un giro</option>
+                {girosDisponibles.map((giro) => (
+                  <option key={giro} value={giro}>
+                    {giro}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </>
+        )}
+
         <div>
           <label className="block text-gray-700">Red Social</label>
           <input
