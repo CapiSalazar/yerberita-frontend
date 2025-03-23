@@ -12,16 +12,16 @@ export default function ListadoOrdenesPage() {
       const token = localStorage.getItem('token');
 
       try {
-const res = await fetch('https://yerberita-backend-production.up.railway.app/api/orders', {
+        const res = await fetch('https://yerberita-backend-production.up.railway.app/api/orders', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
         const data = await res.json();
-        console.log('🧾 Órdenes recibidas:', data); // <-- Aquí
+        console.log('🧾 Órdenes recibidas:', data); // Para debugging
 
         if (!res.ok) throw new Error(data.error || 'Error al obtener órdenes');
 
-        setOrdenes(data); // ahora es un array de objetos { order, products }
+        setOrdenes(data); // <-- [{ order, products }]
         setCargando(false);
       } catch (err) {
         setError(err.message);
@@ -50,6 +50,7 @@ const res = await fetch('https://yerberita-backend-production.up.railway.app/api
               <th className="text-left p-2 border-b">🗓 Fecha</th>
               <th className="text-left p-2 border-b">📦 Productos</th>
               <th className="text-left p-2 border-b">💰 Total</th>
+              <th className="text-left p-2 border-b">🏭 Costo Producción</th>
             </tr>
           </thead>
           <tbody>
@@ -69,7 +70,10 @@ const res = await fetch('https://yerberita-backend-production.up.railway.app/api
                   </ul>
                 </td>
                 <td className="p-2 border-b font-semibold">
-                  ${parseFloat(order.total_price).toFixed(2)}
+                  ${parseFloat(order.total_price || 0).toFixed(2)}
+                </td>
+                <td className="p-2 border-b text-sm">
+                  ${parseFloat(order.total_costo_produccion || 0).toFixed(2)}
                 </td>
               </tr>
             ))}
