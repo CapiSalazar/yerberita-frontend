@@ -80,7 +80,7 @@ export default function DashboardPage() {
         <EmptyCard />
         <EmptyCard />
         <EmptyCard />
-        <Card title="📦 Utilidad Esperada" value={`$${utilidad_esperada.toFixed(2)}`} color="bg-green-100" />
+        <EmptyCard />
       </div>
     </div>
   );
