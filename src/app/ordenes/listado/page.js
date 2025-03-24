@@ -37,7 +37,7 @@ export default function ListadoOrdenesPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}), // <- ¡esto es lo que faltaba!
+        body: JSON.stringify({ is_delivered: true }),
       });
   
       if (!res.ok) throw new Error('Error al marcar como entregada');
@@ -55,7 +55,7 @@ export default function ListadoOrdenesPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}), // <- también aquí
+        body: JSON.stringify({ is_paid: true }),
       });
   
       if (!res.ok) throw new Error('Error al marcar como pagada');
