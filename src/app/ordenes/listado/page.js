@@ -39,14 +39,15 @@ export default function ListadoOrdenesPage() {
         },
         body: JSON.stringify({ is_delivered: true }),
       });
-  
+
       if (!res.ok) throw new Error('Error al marcar como entregada');
-      fetchOrdenes(); // Refresh
+      alert('🚚 Orden marcada como entregada ✅');
+      fetchOrdenes();
     } catch (err) {
       alert(err.message);
     }
   };
-  
+
   const marcarPagada = async (id) => {
     try {
       const res = await fetch(`https://yerberita-backend-production.up.railway.app/api/orders/pagar/${id}`, {
@@ -57,14 +58,14 @@ export default function ListadoOrdenesPage() {
         },
         body: JSON.stringify({ is_paid: true }),
       });
-  
+
       if (!res.ok) throw new Error('Error al marcar como pagada');
-      fetchOrdenes(); // Refresh
+      alert('💳 Orden marcada como pagada ✅');
+      fetchOrdenes();
     } catch (err) {
       alert(err.message);
     }
   };
-  
 
   return (
     <div className="max-w-6xl mx-auto mt-10 bg-white p-6 rounded shadow">
