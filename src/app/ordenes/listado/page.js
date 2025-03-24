@@ -113,33 +113,34 @@ export default function ListadoOrdenesPage() {
                   ${parseFloat(order.total_costo_produccion || 0).toFixed(2)}
                 </td>
                 <td className="p-2 border-b">
-                  {order.is_delivered ? (
-                    <span className="text-green-700">
-                      ✅ {new Date(order.delivered_at).toLocaleDateString()}
-                    </span>
-                  ) : (
-                    <button
-                      onClick={() => marcarEntregada(order.id)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Marcar como entregada
-                    </button>
-                  )}
-                </td>
-                <td className="p-2 border-b">
-                  {order.is_paid ? (
-                    <span className="text-green-700">
-                      ✅ {new Date(order.paid_at).toLocaleDateString()}
-                    </span>
-                  ) : (
-                    <button
-                      onClick={() => marcarPagada(order.id)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Marcar como pagada
-                    </button>
-                  )}
-                </td>
+  {order.is_delivered ? (
+    <span className="text-green-700">
+      ✅ Entregada el {new Date(order.delivered_at).toLocaleDateString()}
+    </span>
+  ) : (
+    <button
+      onClick={() => marcarEntregada(order.id)}
+      className="text-blue-600 hover:underline"
+    >
+      Marcar como entregada
+    </button>
+  )}
+</td>
+<td className="p-2 border-b">
+  {order.is_paid ? (
+    <span className="text-green-700">
+      ✅ Pagada el {new Date(order.paid_at).toLocaleDateString()}
+    </span>
+  ) : (
+    <button
+      onClick={() => marcarPagada(order.id)}
+      className="text-blue-600 hover:underline"
+    >
+      Marcar como pagada
+    </button>
+  )}
+</td>
+
               </tr>
             ))}
           </tbody>
