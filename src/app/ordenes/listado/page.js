@@ -6,31 +6,54 @@ export default function ListadoOrdenesPage() {
   const [ordenes, setOrdenes] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : '';
+
+  const fetchOrdenes = async () => {
+    try {
+      const res = await fetch('https://yerberita-backend-production.up.railway.app/api/orders', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Error al obtener órdenes');
+
+      setOrdenes(data);
+      setCargando(false);
+    } catch (err) {
+      setError(err.message);
+      setCargando(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrdenes = async () => {
-      const token = localStorage.getItem('token');
-
-      try {
-        const res = await fetch('https://yerberita-backend-production.up.railway.app/api/orders', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const data = await res.json();
-        console.log('🧾 Órdenes recibidas:', data); // Para debugging
-
-        if (!res.ok) throw new Error(data.error || 'Error al obtener órdenes');
-
-        setOrdenes(data); // <-- [{ order, products }]
-        setCargando(false);
-      } catch (err) {
-        setError(err.message);
-        setCargando(false);
-      }
-    };
-
     fetchOrdenes();
   }, []);
+
+  const marcarEntregada = async (id) => {
+    try {
+      const res = await fetch(`https://yerberita-backend-production.up.railway.app/api/orders/${id}/entregar`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('Error al marcar como entregada');
+      fetchOrdenes(); // Refresh
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const marcarPagada = async (id) => {
+    try {
+      const res = await fetch(`https://yerberita-backend-production.up.railway.app/api/orders/${id}/pagar`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error('Error al marcar como pagada');
+      fetchOrdenes(); // Refresh
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto mt-10 bg-white p-6 rounded shadow">
@@ -51,6 +74,8 @@ export default function ListadoOrdenesPage() {
               <th className="text-left p-2 border-b">📦 Productos</th>
               <th className="text-left p-2 border-b">💰 Total</th>
               <th className="text-left p-2 border-b">🏭 Costo Producción</th>
+              <th className="text-left p-2 border-b">🚚 Entregada</th>
+              <th className="text-left p-2 border-b">💳 Pagada</th>
             </tr>
           </thead>
           <tbody>
@@ -72,8 +97,36 @@ export default function ListadoOrdenesPage() {
                 <td className="p-2 border-b font-semibold">
                   ${parseFloat(order.total_price || 0).toFixed(2)}
                 </td>
-                <td className="p-2 border-b text-sm">
+                <td className="p-2 border-b">
                   ${parseFloat(order.total_costo_produccion || 0).toFixed(2)}
+                </td>
+                <td className="p-2 border-b">
+                  {order.is_delivered ? (
+                    <span className="text-green-700">
+                      ✅ {new Date(order.delivered_at).toLocaleDateString()}
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => marcarEntregada(order.id)}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Marcar como entregada
+                    </button>
+                  )}
+                </td>
+                <td className="p-2 border-b">
+                  {order.is_paid ? (
+                    <span className="text-green-700">
+                      ✅ {new Date(order.paid_at).toLocaleDateString()}
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => marcarPagada(order.id)}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Marcar como pagada
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
