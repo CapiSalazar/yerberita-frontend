@@ -62,14 +62,15 @@ export default function DashboardPage() {
         <EmptyCard />
         <EmptyCard />
         <EmptyCard />
+        <EmptyCard />
       </div>
 
       {/* Fila 2 */}
       <div className="grid grid-cols-5 gap-6 max-w-6xl mx-auto mb-6">
         <Card title="💰 Ingresos Reales" value={`$${ingresos_reales.toFixed(2)}`} color="bg-green-200" />
         <Card title="💸 Costo Producción" value={`$${total_production_cost.toFixed(2)}`} color="bg-yellow-200" />
-        <Card title="💎 Gastos" value={`$${total_expenses.toFixed(2)}`} color="bg-red-200" />
-        <Card title="📊 Balance (Caja)" value={`$${balance.toFixed(2)}`} color="bg-blue-100" />     
+        <Card title="📊 Balance (Caja)" value={`$${balance.toFixed(2)}`} color="bg-blue-100" /> 
+        <Card title="💎 Gastos" value={`$${total_expenses.toFixed(2)}`} color="bg-red-200" />  
         <Card title="📈 Utilidad Neta" value={`$${net_profit.toFixed(2)}`} color="bg-blue-200" />
       </div>
 
