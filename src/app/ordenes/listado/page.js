@@ -31,7 +31,7 @@ export default function ListadoOrdenesPage() {
 
   const marcarEntregada = async (id) => {
     try {
-      const res = await fetch(`https://yerberita-backend-production.up.railway.app/api/orders/${id}/entregar`, {
+      const res = await fetch(`https://yerberita-backend-production.up.railway.app/api/orders/entregar/${id}`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -44,7 +44,7 @@ export default function ListadoOrdenesPage() {
 
   const marcarPagada = async (id) => {
     try {
-      const res = await fetch(`https://yerberita-backend-production.up.railway.app/api/orders/${id}/pagar`, {
+      const res = await fetch(`https://yerberita-backend-production.up.railway.app/api/orders/pagar/${id}`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}` },
       });
